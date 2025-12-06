@@ -26,6 +26,7 @@ class DataLoaderHandler:
     
     def __init__(self, console: Console = None):
         self.console = console or Console()
+        # self.console = console or Console(color_system=None)
         self.progress = None
         
     def create_data_progress(self, description: str = "Loading Data"):
@@ -43,7 +44,7 @@ class DataLoaderHandler:
     def log_dataset_stats(self, dataset_info: Dict[str, Any]):
         """Display dataset statistics."""
         table = Table(title="📊 Dataset Statistics", show_header=True, header_style="bold magenta")
-        table.add_column("Metric", style="cyan")
+        table.add_column("Metric", style="green")
         table.add_column("Value", style="yellow")
         
         for key, value in dataset_info.items():
@@ -57,8 +58,8 @@ class DataLoaderHandler:
         panel = Panel(
             transforms_text,
             title="🔄 Data Transforms",
-            style="blue",
-            border_style="blue"
+            style="white",
+            border_style="white"
         )
         self.console.print(panel)
 

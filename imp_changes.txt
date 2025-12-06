@@ -1,0 +1,9 @@
+1:
+data.py file 
+    In the original data.py file we have used the 'split' because we have only One dot but in my custom data I have multiple dots so 
+    to get the correct text file we have to split it from the back i.e. performe a right split(function is 'rsplit')
+    and taking the first part, that's how we get our image base name.
+
+2:
+config.json file
+    In the config.json I have made the changes to work with 26 classes instead of only three
