@@ -103,7 +103,7 @@ class DETRData(Dataset):
     
 
 if __name__ == '__main__':
-    dataset = DETRData('data/train',train=True)
+    dataset = DETRData('data/test',train=False)
     dataloader = DataLoader(dataset,collate_fn=stacker,batch_size=4,drop_last=True)
     X,y = next(iter(dataloader))
     print(Fore.LIGHTCYAN_EX + str(y) + Fore.RESET)
