@@ -58,8 +58,8 @@ class DataLoaderHandler:
         panel = Panel(
             transforms_text,
             title="🔄 Data Transforms",
-            style="white",
-            border_style="white"
+            style="cyan",
+            border_style="green"
         )
         self.console.print(panel)
 
