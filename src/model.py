@@ -40,7 +40,7 @@ def build_2d_sincos_position_embedding(height: int, width: int, dim: int, device
 
 class DETR(nn.Module):
     def __init__(self, num_classes, hidden_dim=256, nheads=8,
-                 num_encoder_layers=1, num_decoder_layers=1, num_queries=25):
+                 num_encoder_layers=3, num_decoder_layers=3, num_queries=100):
         super().__init__()
         
         # Initialize logger and model handler
@@ -74,7 +74,13 @@ class DETR(nn.Module):
         # prediction heads, one extra class for predicting non-empty slots
         # note that in baseline DETR linear_bbox layer is 3-layer MLP
         self.linear_class = nn.Linear(hidden_dim, num_classes + 1)
-        self.linear_bbox = nn.Linear(hidden_dim, 4)
+        self.linear_bbox = nn.Sequential(
+            nn.Linear(hidden_dim,hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim,hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim,4)
+        )
 
         # number of object queries
         self.num_queries = num_queries
@@ -126,15 +132,34 @@ class DETR(nn.Module):
         trainable_params = sum(p.numel() for p in self.parameters() if p.requires_grad)
         self.model_handler.log_parameters_count(total_params, trainable_params)
         
-    def load_pretrained(self, checkpoint_path: str):
+    def load_pretrained(self, checkpoint_path: str, map_location = 'cpu'):
         """Load pretrained weights with logging."""
         try:
-            self.load_state_dict(torch.load(checkpoint_path))
-            self.model_handler.log_model_loading(checkpoint_path, success=True)
-        except Exception as e:
-            self.logger.error(f"Failed to load checkpoint: {str(e)}")
-            self.model_handler.log_model_loading(checkpoint_path, success=False)
+            ckpt = torch.load(checkpoint_path,map_location=map_location)
+            if isinstance(ckpt,dict):
+                if 'model_state' in ckpt:
+                    state = ckpt['model_state']
+                elif 'state_dict' in ckpt:
+                    state = ckpt['state_dict']
+                elif 'model' in ckpt:
+                    state = ckpt['model']
+                else:
+                    state =  ckpt
+            else:
+                state = ckpt
 
+            missing_keys, unexpected_keys = self.load_state_dict(state, strict=False)
+            # logging / info
+            self.logger.info(f"Loaded checkpoint: {checkpoint_path}")
+            self.logger.info(f"Missing keys: {missing_keys}")
+            self.logger.info(f"Unexpected keys: {unexpected_keys}")
+            self.model_handler.log_model_loading(checkpoint_path, success=True)
+            return True 
+        except Exception as e:
+            self.logger.info(f'failde to load checkpoints: {e}')
+            self.model_handler.log_model_loading(checkpoint_path, success= False)
+            return False
+    
 
 if __name__ == '__main__': 
     model = DETR(num_classes=26)
