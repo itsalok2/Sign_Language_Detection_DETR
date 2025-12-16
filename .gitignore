@@ -208,3 +208,5 @@ __marimo__/
 pretrained/
 checkpoints/
 logs/
+abc.ipynb 
+vit_understanding.ipynb

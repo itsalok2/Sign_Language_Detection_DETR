@@ -7,10 +7,10 @@ import albumentations as A
 import numpy as np 
 from colorama import Fore 
 from matplotlib import pyplot as plt 
-from utils.boxes import rescale_bboxes,stacker 
-from utils.setup import get_classes 
-from utils.logger import get_logger 
-from utils.rich_handlers import DataLoaderHandler
+from src.utils.boxes import rescale_bboxes,stacker 
+from src.utils.setup import get_classes 
+from src.utils.logger import get_logger 
+from src.utils.rich_handlers import DataLoaderHandler
 import sys 
 
 class DETRData(Dataset):

@@ -3,8 +3,8 @@ from torch import nn
 from torchvision.models import resnet50, ResNet50_Weights
 import sys 
 from colorama import Fore 
-from utils.logger import get_logger
-from utils.rich_handlers import ModelHandler
+from src.utils.logger import get_logger
+from src.utils.rich_handlers import ModelHandler
 from torchinfo import summary
 import sys 
 import math
